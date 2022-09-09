@@ -1,14 +1,42 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "./dist/",
+    "moduleResolution": "node",
     "noImplicitAny": true,
+    "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "target": "ES6",
-    "downlevelIteration": true,
-    "lib": ["dom","es6", "dom.iterable"],
-    "outDir": "dist",
-    "experimentalDecorators": true,
+    "module": "commonjs",
+    "target": "es2021",
+    "allowJs": true,
+    "esModuleInterop": true,
     "emitDecoratorMetadata": true,
-    "moduleResolution": "Node",
-  }
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "lib": [
+      "es7",
+      "es2015",
+      "dom"
+    ],
+    "paths": {
+      "Components/*": [
+        "src/components/*"
+      ],
+      "Entity/*": [
+        "src/models/*"
+      ],
+      "*": [
+        "types/*"
+      ]
+    }
+  },
+  "include": [
+    "./src/**/*",
+    "public"
+  ],
+  "exclude": [
+    "../node_modules",
+    "**/*.spec.ts"
+  ]
 }
