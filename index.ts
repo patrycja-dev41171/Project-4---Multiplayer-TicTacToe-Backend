@@ -5,11 +5,15 @@ import * as dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import cors from "cors";
-import {handleError} from "./utils/handleErrors";
-
-import { appRouter } from "./routers/app";
+const http = require('http');
+import { handleError } from "./utils/handleErrors";
+import {signUpRouter} from "./routers/signUp";
+import {Server} from "socket.io";
 
 const app = express();
+
+const server = http.createServer(app);
+const io = new Server(server)
 
 dotenv.config({ path: ".env" });
 
@@ -34,10 +38,10 @@ app.use(
   })
 );
 
-app.use("/", appRouter);
+app.use("/sign-up", signUpRouter);
 
 app.use(handleError);
 
-app.listen(8080, 'localhost', () => {
+server.listen(8080, "localhost", () => {
   console.log("Listening on http://localhost:8080");
 });
