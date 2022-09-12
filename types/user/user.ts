@@ -5,3 +5,10 @@ export type User = {
     password: string;
     confirmPassword: string;
 }
+
+export interface UserEntity {
+    id?:string;
+    username: string;
+    email: string;
+    password: string;
+}
