@@ -1,13 +1,21 @@
 import "express-async-errors";
-import * as dotenv from 'dotenv';
-import { appRouter } from "./routers/app";
-import rateLimit from "express-rate-limit";
 import express from "express";
+import cookieParser from "cookie-parser";
+import * as dotenv from "dotenv";
+import rateLimit from "express-rate-limit";
+import helmet from "helmet";
 import cors from "cors";
+import {handleError} from "./utils/handleErrors";
+
+import { appRouter } from "./routers/app";
 
 const app = express();
 
 dotenv.config({ path: ".env" });
+
+app.use(helmet());
+
+app.use(cookieParser());
 
 app.use(
   cors({
@@ -28,6 +36,8 @@ app.use(
 
 app.use("/", appRouter);
 
-app.listen(3001, "0.0.0.0", () => {
-  console.log("Listening on http://localhost:3001");
+app.use(handleError);
+
+app.listen(8080, 'localhost', () => {
+  console.log("Listening on http://localhost:8080");
 });
