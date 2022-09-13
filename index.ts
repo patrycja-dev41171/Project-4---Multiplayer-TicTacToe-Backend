@@ -9,6 +9,7 @@ const http = require('http');
 import { handleError } from "./utils/handleErrors";
 import {signUpRouter} from "./routers/signUp";
 import {Server} from "socket.io";
+import {loginRouter} from "./routers/login";
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use(
 );
 
 app.use("/sign-up", signUpRouter);
+app.use("/login", loginRouter);
 
 app.use(handleError);
 
