@@ -9,7 +9,6 @@ export const loginRouter = Router();
 loginRouter
   .post("/", async (req, res) => {
     const { email, password } = req.body;
-    const cookie = req.cookies.refreshToken;
 
     if (
       req.cookies.refreshToken !== undefined &&
@@ -43,7 +42,7 @@ loginRouter
         maxAge: 24 * 60 * 60 * 1000,
       })
       .json({
-        id: user.id,
+        user_id: user.id,
         accessToken: loginDataCreated.token,
       });
   })
@@ -62,5 +61,4 @@ loginRouter
     } catch (err) {
       throw new ValidationError("There was an error logging out the user!");
     }
-
   });
