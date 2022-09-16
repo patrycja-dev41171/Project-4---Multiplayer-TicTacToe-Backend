@@ -41,7 +41,7 @@ export class LoginRecord implements LoginEntity {
     refreshToken: string
   ): Promise<LoginEntity> {
     const [results] = (await pool.execute(
-      "SELECT * FROM `login` WHERE `refreshToken` =" + " :refreshToken",
+      "SELECT * FROM `login` WHERE `refreshToken` = :refreshToken",
       {
         refreshToken,
       }

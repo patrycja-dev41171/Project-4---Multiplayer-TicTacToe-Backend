@@ -11,7 +11,8 @@ import { signUpRouter } from "./routers/signUp";
 import { Server } from "socket.io";
 import { loginRouter } from "./routers/login";
 import { refreshTokenRouter } from "./routers/refreshToken";
-import {gameRouter} from "./routers/game";
+import { gameRouter } from "./routers/game";
+import { auth } from "./utils/auth";
 
 const app = express();
 
@@ -20,7 +21,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
-    // methods: ["GET", "POST"],
+    methods: ["GET", "POST"],
   },
 });
 
@@ -32,7 +33,7 @@ app.use(
 );
 dotenv.config({ path: ".env" });
 app.use(express.json());
-// app.use(helmet());
+app.use(helmet());
 app.use(cookieParser());
 app.use(
   rateLimit({
@@ -46,10 +47,27 @@ app.use(
 app.use("/sign-up", signUpRouter);
 app.use("/login", loginRouter);
 app.use("/refreshToken", refreshTokenRouter);
-app.use("/game", gameRouter);
+app.use("/game", auth, gameRouter);
 
 app.use(handleError);
 
 server.listen(8080, (localhost: any) => {
   console.log("Listening on http://localhost:8080");
+});
+
+io.on("connection", (socket: any) => {
+  console.log(`User Connected: ${socket.id}`);
+  socket.on("join_room", (data: any) => {
+    socket.join(data);
+    console.log(`User ${socket.id} join the room: ${data}`);
+    socket.to(data).emit("player_join", socket.id);
+  });
+
+  socket.on("send_message", (data: any) => {
+    socket.to(data.room).emit("receive_message", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconect", socket.id);
+  });
 });
