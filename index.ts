@@ -13,6 +13,7 @@ import { loginRouter } from "./routers/login";
 import { refreshTokenRouter } from "./routers/refreshToken";
 import { gameRouter } from "./routers/game";
 import { auth } from "./utils/auth";
+import {homeDataRouter} from "./routers/homeData";
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use("/sign-up", signUpRouter);
 app.use("/login", loginRouter);
 app.use("/refreshToken", refreshTokenRouter);
 app.use("/game", auth, gameRouter);
+app.use("/home", auth, homeDataRouter);
 
 app.use(handleError);
 
