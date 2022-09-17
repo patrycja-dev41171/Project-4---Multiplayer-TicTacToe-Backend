@@ -27,7 +27,7 @@ export const refreshTokenRouter = Router().get("/", async (req, res) => {
         const accessToken = jwt.sign(
           { user_id: result.user_id },
           process.env.ACCESS_TOKEN_KEY,
-          { expiresIn: "10sec" }
+          { expiresIn: "10min" }
         );
 
         res.json({
