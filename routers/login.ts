@@ -43,6 +43,7 @@ loginRouter
       })
       .json({
         user_id: user.id,
+        username: user.username,
         accessToken: loginDataCreated.token,
       });
   })

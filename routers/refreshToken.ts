@@ -17,7 +17,6 @@ export const refreshTokenRouter = Router().get("/", async (req, res) => {
     }
 
     const user = await UserRecord.getOneByUserId(result.user_id);
-
     jwt.verify(refreshToken, process.env.ACCESS_REFRESH_TOKEN_KEY, (err) => {
       if (err) {
         res.clearCookie("refreshToken");
@@ -28,12 +27,13 @@ export const refreshTokenRouter = Router().get("/", async (req, res) => {
         const accessToken = jwt.sign(
           { user_id: result.user_id },
           process.env.ACCESS_TOKEN_KEY,
-          { expiresIn: "10sec" }
+          { expiresIn: "10min" }
         );
 
         res.json({
           accessToken: accessToken,
           user_id: user.id,
+          username: user.username,
         });
       } catch (err) {
         throw new ValidationError(

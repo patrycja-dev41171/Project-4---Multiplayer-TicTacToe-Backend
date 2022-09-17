@@ -41,7 +41,7 @@ export class LoginRecord implements LoginEntity {
     refreshToken: string
   ): Promise<LoginEntity> {
     const [results] = (await pool.execute(
-      "SELECT * FROM `login` WHERE `refreshToken` =" + " :refreshToken",
+      "SELECT * FROM `login` WHERE `refreshToken` = :refreshToken",
       {
         refreshToken,
       }
@@ -60,12 +60,12 @@ export class LoginRecord implements LoginEntity {
 
   static createTokens(payload: string): LoginDataCreated {
     const token = jwt.sign({ id: payload }, process.env.ACCESS_TOKEN_KEY, {
-      expiresIn: "10sec",
+      expiresIn: "10min",
     });
     const refreshToken = jwt.sign(
       { id: payload },
       process.env.ACCESS_REFRESH_TOKEN_KEY,
-      { expiresIn: "24h" }
+      { expiresIn: "48h" }
     );
     return {
       user_id: payload,
