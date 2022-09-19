@@ -15,7 +15,7 @@ import { gameRouter } from "./routers/game";
 import { refreshTokenRouter } from "./routers/refreshToken";
 import { signUpRouter } from "./routers/signUp";
 import { loginRouter } from "./routers/login";
-import {config} from "./config/config";
+import { config } from "./config/config";
 
 const app = express();
 
@@ -57,6 +57,6 @@ app.use("/api/home", auth, homeDataRouter);
 
 app.use(handleError);
 
-server.listen(8080, (localhost: any) => {
-  console.log("Listening on http://localhost:8080");
+server.listen(3001, "0.0.0.0", () => {
+  console.log("Listening on http://localhost:3001");
 });
