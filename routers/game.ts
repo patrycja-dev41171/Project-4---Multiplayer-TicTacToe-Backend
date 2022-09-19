@@ -1,7 +1,9 @@
 import { Router } from "express";
+import { Room } from "../types";
 import { RoomRecord } from "../records/room.record";
 import { ValidationError } from "../utils/handleErrors";
-import { Room } from "../types";
+import { UserRecord } from "../records/user.record";
+import { PlayRecord } from "../records/play.record";
 
 export const gameRouter = Router();
 
@@ -72,5 +74,49 @@ gameRouter
       } catch (err) {
         throw new ValidationError("An error occurred while joining the game.");
       }
+    }
+  })
+
+  .get("/get-opponent/:room_id/:user_id", async (req, res) => {
+    const room = await RoomRecord.getOneByRoom_id(req.params.room_id);
+
+    if (room === null) {
+      throw new ValidationError("Game error. No such game room.");
+    }
+
+    if (room.first_user_id === req.params.user_id) {
+      const user = await UserRecord.getOneByUserId(room.second_user_id);
+      if (user === null) {
+        throw new ValidationError("There is no specific user in the database.");
+      }
+      res.json({
+        opponentName: user.username,
+      });
+    } else {
+      const user = await UserRecord.getOneByUserId(room.first_user_id);
+      if (user === null) {
+        throw new ValidationError("There is no specific user in the database.");
+      }
+      res.json({
+        opponentName: user.username,
+      });
+    }
+  })
+
+  .post("/save-result", async (req, res) => {
+    const { user_id, points } = req.body;
+
+    const play = await new PlayRecord({
+      user_id: user_id,
+      points: points,
+    });
+
+    try {
+      await play.insert();
+      res.json("Results saved.");
+    } catch (err) {
+      throw new ValidationError(
+        "An error occurred while saving results in database."
+      );
     }
   });
