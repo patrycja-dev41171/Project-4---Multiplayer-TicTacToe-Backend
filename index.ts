@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Router } from "express";
 import "express-async-errors";
 const http = require("http");
 import cookieParser from "cookie-parser";
@@ -24,7 +24,7 @@ export const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
-  }
+  },
 });
 
 app.use(
@@ -48,12 +48,14 @@ app.use(
   })
 );
 
-app.use("/sign-up", signUpRouter);
-app.use("/login", loginRouter);
-app.use("/refreshToken", refreshTokenRouter);
-app.use("/game", auth, gameRouter);
-app.use("/home", auth, homeDataRouter);
+const router = Router();
+router.use("/sign-up", signUpRouter);
+router.use("/login", loginRouter);
+router.use("/refreshToken", refreshTokenRouter);
+router.use("/game", auth, gameRouter);
+router.use("/home", auth, homeDataRouter);
 
+app.use('/api', router)
 app.use(handleError);
 
 server.listen(8080, (localhost: any) => {
