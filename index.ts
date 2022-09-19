@@ -7,7 +7,6 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import cors from "cors";
 import { Server } from "socket.io";
-
 import { auth } from "./utils/auth";
 import { handleError } from "./utils/handleErrors";
 
@@ -25,7 +24,7 @@ export const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
-  },
+  }
 });
 
 app.use(
