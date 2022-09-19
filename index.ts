@@ -6,20 +6,22 @@ import * as dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import cors from "cors";
-import { handleError } from "./utils/handleErrors";
-import { signUpRouter } from "./routers/signUp";
 import { Server } from "socket.io";
-import { loginRouter } from "./routers/login";
-import { refreshTokenRouter } from "./routers/refreshToken";
-import { gameRouter } from "./routers/game";
+
 import { auth } from "./utils/auth";
-import {homeDataRouter} from "./routers/homeData";
+import { handleError } from "./utils/handleErrors";
+
+import { homeDataRouter } from "./routers/homeData";
+import { gameRouter } from "./routers/game";
+import { refreshTokenRouter } from "./routers/refreshToken";
+import { signUpRouter } from "./routers/signUp";
+import { loginRouter } from "./routers/login";
 
 const app = express();
 
 const server = http.createServer(app);
 
-const io = new Server(server, {
+export const io = new Server(server, {
   cors: {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
@@ -32,7 +34,9 @@ app.use(
     credentials: true,
   })
 );
+
 dotenv.config({ path: ".env" });
+
 app.use(express.json());
 app.use(helmet());
 app.use(cookieParser());
@@ -55,21 +59,4 @@ app.use(handleError);
 
 server.listen(8080, (localhost: any) => {
   console.log("Listening on http://localhost:8080");
-});
-
-io.on("connection", (socket: any) => {
-  console.log(`User Connected: ${socket.id}`);
-  socket.on("join_room", (data: any) => {
-    socket.join(data);
-    console.log(`User ${socket.id} join the room: ${data}`);
-    socket.to(data).emit("player_join", socket.id);
-  });
-
-  socket.on("send_message", (data: any) => {
-    socket.to(data.room).emit("receive_message", data);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconect", socket.id);
-  });
 });
