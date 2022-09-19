@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import "express-async-errors";
-const https = require("https");
+const http = require("http");
 import cookieParser from "cookie-parser";
 import * as dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
@@ -19,7 +19,7 @@ import { config } from "./config/config";
 
 const app = express();
 
-const server = https.createServer(app);
+const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
