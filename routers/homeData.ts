@@ -1,12 +1,22 @@
 import { Router } from "express";
-import { HomeDataRecord } from "../records/homeData.record";
 import { Scoreboard } from "../types";
+import { HomeDataRecord } from "../records/homeData.record";
 
 export const homeDataRouter = Router();
 
 homeDataRouter.get("/data/:user_id", async (req, res) => {
   const list = await HomeDataRecord.getAll();
+
   const user = list.find((x) => x.user_id === req.params.user_id);
+
+  if (user === undefined) {
+    res.json({
+      points: 0,
+      number_of_games: 0,
+      place: 0,
+      scoreboard: [],
+    });
+  }
 
   const numOfGames = await HomeDataRecord.getNumberOfGames(req.params.user_id);
 
