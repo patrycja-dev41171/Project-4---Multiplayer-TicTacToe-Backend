@@ -15,6 +15,7 @@ import { gameRouter } from "./routers/game";
 import { refreshTokenRouter } from "./routers/refreshToken";
 import { signUpRouter } from "./routers/signUp";
 import { loginRouter } from "./routers/login";
+import {config} from "./config/config";
 
 const app = express();
 
@@ -22,14 +23,14 @@ const server = http.createServer(app);
 
 export const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: config.corsOrigin,
     methods: ["GET", "POST"],
   },
 });
 
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: config.corsOrigin,
     credentials: true,
   })
 );
@@ -48,14 +49,12 @@ app.use(
   })
 );
 
-const router = Router();
-router.use("/sign-up", signUpRouter);
-router.use("/login", loginRouter);
-router.use("/refreshToken", refreshTokenRouter);
-router.use("/game", auth, gameRouter);
-router.use("/home", auth, homeDataRouter);
+app.use("/api/sign-up", signUpRouter);
+app.use("/api/login", loginRouter);
+app.use("/api/refreshToken", refreshTokenRouter);
+app.use("/api/game", auth, gameRouter);
+app.use("/api/home", auth, homeDataRouter);
 
-app.use('/api', router)
 app.use(handleError);
 
 server.listen(8080, (localhost: any) => {
