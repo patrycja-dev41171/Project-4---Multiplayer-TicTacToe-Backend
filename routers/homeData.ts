@@ -1,11 +1,12 @@
 import { Router } from "express";
-import { HomeDataRecord } from "../records/homeData.record";
 import { Scoreboard } from "../types";
+import { HomeDataRecord } from "../records/homeData.record";
 
 export const homeDataRouter = Router();
 
 homeDataRouter.get("/data/:user_id", async (req, res) => {
   const list = await HomeDataRecord.getAll();
+
   const user = list.find((x) => x.user_id === req.params.user_id);
 
   const numOfGames = await HomeDataRecord.getNumberOfGames(req.params.user_id);
@@ -35,12 +36,21 @@ homeDataRouter.get("/data/:user_id", async (req, res) => {
     };
   });
 
-  const place = scoreboard.find((x) => x.username === user.username);
+  if (user === undefined || !user) {
+    res.json({
+      points: 0,
+      number_of_games: 0,
+      place: 0,
+      scoreboard: scoreboard,
+    });
+  } else {
+    const place = scoreboard.find((x) => x.username === user.username);
 
-  res.json({
-    points: place.points,
-    number_of_games: numOfGames,
-    place: place.id,
-    scoreboard: scoreboard,
-  });
+    res.json({
+      points: place.points,
+      number_of_games: numOfGames,
+      place: place.id,
+      scoreboard: scoreboard,
+    });
+  }
 });
